@@ -4,35 +4,19 @@ const previewCanvas = document.getElementById("preview");
 const previewCtx = previewCanvas.getContext("2d");
 
 const colors = [
-  "",             
-  "#00f0f0",      
-  "#0000f0",      
-  "#f0a000",      
-  "#f0f000",      
-  "#00f000",      
-  "#a000f0",      
-  "#f00000",      
-  "#00c0ff",       
+  "", "#00f0f0", "#0000f0", "#f0a000", "#f0f000", "#00f000", "#a000f0", "#f00000", "#00c0ff"
 ];
 
 const ROWS = 20;
 const COLS = 10;
 const BLOCK_SIZE = 30;
-let grid = createMatrix(COLS, ROWS);
-let currentPiece, nextPiece;
-let score = 0, level = 1, lines = 0;
-let dropInterval = 1000;
-let dropCounter = 0;
-let lastTime = 0;
-let gameOver = false;
-let paused = false;
-let gameStarted = false;
+let grid, currentPiece, nextPiece;
+let score, level, lines, dropInterval, dropCounter, lastTime;
+let gameOver = false, paused = false, gameStarted = false;
 
 const scoreElem = document.getElementById("score");
 const levelElem = document.getElementById("level");
 const gameOverElem = document.getElementById("gameOver");
-
-
 
 document.getElementById("startBtn").onclick = () => {
   if (!gameStarted) {
@@ -42,24 +26,19 @@ document.getElementById("startBtn").onclick = () => {
 };
 
 document.getElementById("pauseBtn").onclick = () => paused = true;
-
 document.getElementById("resumeBtn").onclick = () => {
   if (!gameOver) paused = false;
   update();
 };
-
-document.getElementById("restartBtn").onclick = () => startGame();
-
+document.getElementById("restartBtn").onclick = () => {
+  gameStarted = true;
+  startGame();
+};
 
 const pieces = [
-  [[8, 8, 8, 8]], 
-  [[1, 1, 1], [0, 1, 0]],
-  [[0, 2, 2], [2, 2, 0]],
-  [[3, 3, 0], [0, 3, 3]],
-  [[4, 4], [4, 4]],
-  [[0, 5, 0], [5, 5, 5]],
-  [[6, 0, 0], [6, 6, 6]],
-  [[0, 0, 7], [7, 7, 7]]
+  [[8, 8, 8, 8]], [[1, 1, 1], [0, 1, 0]], [[0, 2, 2], [2, 2, 0]],
+  [[3, 3, 0], [0, 3, 3]], [[4, 4], [4, 4]], [[0, 5, 0], [5, 5, 5]],
+  [[6, 0, 0], [6, 6, 6]], [[0, 0, 7], [7, 7, 7]]
 ];
 
 function createMatrix(w, h) {
@@ -81,16 +60,11 @@ function drawMatrix(matrix, offset, context, size = BLOCK_SIZE) {
 
 function collide(grid, piece) {
   const { matrix, pos } = piece;
-  return matrix.some((row, y) => {
-    return row.some((value, x) => {
-      const px = x + pos.x;
-      const py = y + pos.y;
-      return (
-        value !== 0 &&
-        (px < 0 || px >= COLS || py >= ROWS || (py >= 0 && grid[py][px] !== 0))
-      );
-    });
-  });
+  return matrix.some((row, y) => row.some((value, x) => {
+    const px = x + pos.x;
+    const py = y + pos.y;
+    return value !== 0 && (px < 0 || px >= COLS || py >= ROWS || (py >= 0 && grid[py][px] !== 0));
+  }));
 }
 
 function drawGhostPiece(piece) {
@@ -98,12 +72,8 @@ function drawGhostPiece(piece) {
     matrix: piece.matrix,
     pos: { x: piece.pos.x, y: piece.pos.y }
   };
-
-  while (!collide(grid, ghost)) {
-    ghost.pos.y++;
-  }
+  while (!collide(grid, ghost)) ghost.pos.y++;
   ghost.pos.y--;
-
   ctx.globalAlpha = 0.3;
   drawMatrix(ghost.matrix, ghost.pos, ctx);
   ctx.globalAlpha = 1.0;
@@ -112,9 +82,7 @@ function drawGhostPiece(piece) {
 function merge(grid, piece) {
   piece.matrix.forEach((row, y) =>
     row.forEach((value, x) => {
-      if (value !== 0) {
-        grid[y + piece.pos.y][x + piece.pos.x] = value;
-      }
+      if (value !== 0) grid[y + piece.pos.y][x + piece.pos.x] = value;
     })
   );
 }
@@ -134,6 +102,15 @@ function playerDrop() {
   dropCounter = 0;
 }
 
+function hardDrop() {
+  while (!collide(grid, currentPiece)) currentPiece.pos.y++;
+  currentPiece.pos.y--;
+  merge(grid, currentPiece);
+  sweepRows();
+  resetPiece();
+  dropCounter = 0;
+}
+
 function sweepRows() {
   let rowCount = 0;
   for (let y = ROWS - 1; y >= 0; y--) {
@@ -144,7 +121,6 @@ function sweepRows() {
       y++;
     }
   }
-
   if (rowCount > 0) {
     score += rowCount * 100;
     lines += rowCount;
@@ -165,12 +141,11 @@ function resetPiece() {
   currentPiece = nextPiece;
   currentPiece.pos = { x: Math.floor(COLS / 2) - Math.floor(currentPiece.matrix[0].length / 2), y: 0 };
   nextPiece = createPiece();
-
   if (collide(grid, currentPiece)) {
     gameOver = true;
     gameOverElem.style.display = 'block';
   }
-  drawPreview(); 
+  drawPreview();
 }
 
 function createPiece() {
@@ -187,29 +162,16 @@ function drawPreview() {
   const blockSize = 30;
   const shapeWidth = matrix[0].length * blockSize;
   const shapeHeight = matrix.length * blockSize;
-  const canvasWidth = previewCanvas.width;
-  const canvasHeight = previewCanvas.height;
-
-  const pixelOffsetX = Math.floor((canvasWidth - shapeWidth) / 2);
-  const pixelOffsetY = Math.floor((canvasHeight - shapeHeight) / 2);
+  const pixelOffsetX = Math.floor((previewCanvas.width - shapeWidth) / 2);
+  const pixelOffsetY = Math.floor((previewCanvas.height - shapeHeight) / 2);
 
   matrix.forEach((row, y) => {
     row.forEach((value, x) => {
       if (value !== 0) {
         previewCtx.fillStyle = colors[value];
-        previewCtx.fillRect(
-          pixelOffsetX + x * blockSize,
-          pixelOffsetY + y * blockSize,
-          blockSize,
-          blockSize
-        );
+        previewCtx.fillRect(pixelOffsetX + x * blockSize, pixelOffsetY + y * blockSize, blockSize, blockSize);
         previewCtx.strokeStyle = "#000000";
-        previewCtx.strokeRect(
-          pixelOffsetX + x * blockSize,
-          pixelOffsetY + y * blockSize,
-          blockSize,
-          blockSize
-        );
+        previewCtx.strokeRect(pixelOffsetX + x * blockSize, pixelOffsetY + y * blockSize, blockSize, blockSize);
       }
     });
   });
@@ -224,37 +186,33 @@ function draw() {
 
 function update(time = 0) {
   if (paused || gameOver || !gameStarted) return;
-
   const deltaTime = time - lastTime;
   lastTime = time;
   dropCounter += deltaTime;
-  if (dropCounter > dropInterval) {
-    playerDrop();
-  }
-
+  if (dropCounter > dropInterval) playerDrop();
   draw();
   requestAnimationFrame(update);
 }
 
 function startGame() {
-  grid = createMatrix(COLS, ROWS);
+  gameOver = false;
+  paused = false;
+  dropCounter = 0;
+  lastTime = 0;
   score = 0;
   level = 1;
   lines = 0;
   dropInterval = 1000;
-  gameOver = false;
-  paused = false;
+  grid = createMatrix(COLS, ROWS);
   gameOverElem.style.display = 'none';
   updateScore();
-
   nextPiece = createPiece();
   resetPiece();
-  drawPreview();
   update();
 }
 
 document.addEventListener("keydown", e => {
-  if (gameOver || paused || !gameStarted) return;
+  if (!gameStarted || gameOver || paused) return;
   if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
     currentPiece.pos.x--;
     if (collide(grid, currentPiece)) currentPiece.pos.x++;
@@ -267,8 +225,9 @@ document.addEventListener("keydown", e => {
     const rotated = rotate(currentPiece.matrix);
     const original = currentPiece.matrix;
     currentPiece.matrix = rotated;
-    if (collide(grid, currentPiece)) {
-      currentPiece.matrix = original;
-    }
+    if (collide(grid, currentPiece)) currentPiece.matrix = original;
+  } else if (e.code === "Space") {
+    e.preventDefault();
+    hardDrop();
   }
 });
