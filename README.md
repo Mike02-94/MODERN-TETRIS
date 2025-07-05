@@ -13,7 +13,7 @@ CSS3 – layout, theming, and board styling
 
 Vanilla JavaScript – game logic, rendering, and user interaction 
 
-![image](https://github.com/user-attachments/assets/754264aa-94da-4c57-9d04-f82ac50ba172)
+![image](https://github.com/user-attachments/assets/8b6ced04-c1ee-424d-a953-a7ca9385264c)
 
 
 Let me know if you'd like a version with a screenshot or badge section too!
