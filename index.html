@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modern Tetris</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+   
+    <div class="panel left">
+      <h2>Score: <span id="score">0</span></h2>
+      <h2>Level: <span id="level">1</span></h2>
+      <h3>Next:</h3>
+      <canvas id="preview" width="120" height="120"></canvas>
+    </div>
+
+   
+    <div class="panel center">
+      <canvas id="game" width="300" height="600"></canvas>
+      <div id="gameOver">Game Over</div>
+      <div class="controls">
+        <button id="startBtn">Start</button>
+        <button id="pauseBtn">Pause</button>
+        <button id="resumeBtn">Resume</button>
+        <button id="restartBtn">Restart</button>
+      </div>
+    </div>
+
+    
+    <div class="panel right">
+      <h3>Instructions</h3>
+      <ul>
+        <li>Fill lines to increase score.</li>
+        <li>Speed increases every 10 lines cleared.</li>
+      </ul>
+      <h3>Controls</h3>
+      <ul>
+        <li>← / A — Move Left</li>
+        <li>→ / D — Move Right</li>
+        <li>↓ / S — Move Down</li>
+        <li>↑ / W — Rotate</li>
+      </ul>
+      <p class="note">Play smart and reach high levels!</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
