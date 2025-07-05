@@ -136,13 +136,15 @@ function playerDrop() {
 
 function sweepRows() {
   let rowCount = 0;
-  outer: for (let y = ROWS - 1; y >= 0; y--) {
+  for (let y = ROWS - 1; y >= 0; y--) {
     if (grid[y].every(cell => cell !== 0)) {
       grid.splice(y, 1);
       grid.unshift(Array(COLS).fill(0));
       rowCount++;
+      y++;
     }
   }
+
   if (rowCount > 0) {
     score += rowCount * 100;
     lines += rowCount;
