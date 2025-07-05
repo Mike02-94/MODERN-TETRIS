@@ -11,10 +11,9 @@ HTML5 – markup structure
 
 CSS3 – layout, theming, and board styling
 
-Vanilla JavaScript – game logic, rendering, and user interaction
+Vanilla JavaScript – game logic, rendering, and user interaction 
 
-![image](https://github.com/user-attachments/assets/be490d63-3bb3-44bf-9a10-729cd642eb17)
-
+![image](https://github.com/user-attachments/assets/754264aa-94da-4c57-9d04-f82ac50ba172)
 
 
 Let me know if you'd like a version with a screenshot or badge section too!
