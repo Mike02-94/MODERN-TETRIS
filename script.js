@@ -229,5 +229,17 @@ document.addEventListener("keydown", e => {
   } else if (e.code === "Space") {
     e.preventDefault();
     hardDrop();
+  } else if (e.key === "Shift") {
+    // ✅ Shape Switch logic
+    if (!gameOver && !paused && gameStarted && nextPiece) {
+      const tempMatrix = currentPiece.matrix;
+      currentPiece.matrix = nextPiece.matrix;
+      currentPiece.pos = {
+        x: Math.floor(COLS / 2) - Math.floor(currentPiece.matrix[0].length / 2),
+        y: 0
+      };
+      nextPiece = { matrix: tempMatrix };
+      drawPreview();
+    }
   }
 });
