@@ -126,7 +126,8 @@ function sweepRows() {
     lines += rowCount;
     if (lines >= level * 10) {
       level++;
-      dropInterval *= 0.9;
+      // ✅ Stronger difficulty curve using exponential scale
+      dropInterval = Math.max(80, Math.floor(1000 * Math.pow(0.7, level - 1)));
     }
     updateScore();
   }
@@ -213,6 +214,7 @@ function startGame() {
 
 document.addEventListener("keydown", e => {
   if (!gameStarted || gameOver || paused) return;
+
   if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
     currentPiece.pos.x--;
     if (collide(grid, currentPiece)) currentPiece.pos.x++;
@@ -230,7 +232,6 @@ document.addEventListener("keydown", e => {
     e.preventDefault();
     hardDrop();
   } else if (e.key === "Shift") {
-    // ✅ Shape Switch logic
     if (!gameOver && !paused && gameStarted && nextPiece) {
       const tempMatrix = currentPiece.matrix;
       currentPiece.matrix = nextPiece.matrix;
