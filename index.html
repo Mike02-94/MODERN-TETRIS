@@ -3,11 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Modern Tetris</title>
+  <title>ShiftGrid</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
+  <div id="loading-screen">
+    <img src="assets/shiftgrid-title.png" alt="ShiftGrid Title" id="title-image" />
+    <div id="loading-bar-container">
+      <div id="loading-bar"></div>
+    </div>
+  </div>
+
+  <!-- 👇 Combo Popup Element -->
+  <div id="combo-popup"></div>
+
+  <div class="container" style="display:none;">
     <div class="panel left">
       <h2>Score: <span id="score">0</span></h2>
       <h2>Level: <span id="level">1</span></h2>
@@ -23,6 +33,7 @@
         <button id="pauseBtn">Pause</button>
         <button id="resumeBtn">Resume</button>
         <button id="restartBtn">Restart</button>
+        <button id="themeToggleBtn">Switch Theme</button>
       </div>
     </div>
 
@@ -31,6 +42,7 @@
       <ul>
         <li>Fill lines to increase score.</li>
         <li>Speed increases every 10 lines cleared.</li>
+        <li><strong>Shift — Switch Shape (once per drop)</strong></li>
       </ul>
       <h3>Controls</h3>
       <ul>
@@ -39,11 +51,12 @@
         <li>↓ / S — Move Down</li>
         <li>↑ / W — Rotate</li>
         <li>Space — Hard Drop</li>
-        <li>Shift — Switch Shape</li> <!-- ✅ Newly added -->
+        <li>Shift — Switch Shape</li>
       </ul>
       <p class="note">Play smart and reach high levels!</p>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>
