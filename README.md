@@ -17,3 +17,9 @@ Vanilla JavaScript – game logic, rendering, and user interaction
 
 
 Let me know if you'd like a version with a screenshot or badge section too!
+
+
+
+**UPDATED UI**
+
+![image](https://github.com/user-attachments/assets/0aff69d6-d135-451e-9f1f-f1c1c57e518c)
